@@ -6,6 +6,8 @@ function main(){
   myView = new othelloView($el,otheloNum)
   myView.reflectViewothelloField(myOthelo.othelloArry)
   myView.reflectNext(myOthelo.possibleMoves)
+  myView.changeScore(myOthelo.othelloArry)
+  myView.reflectGameTurn(myOthelo.gameTurn)
   //click時の振る舞いをかく
   $('.othelloRow td').click(function(){
     let selectedPlace = $(this).attr('place')
@@ -13,11 +15,12 @@ function main(){
     if(res['isMove']){
       myView.reflectViewothelloField(res['othelloArry'])
       myView.reflectNext(res['possibleMoves'])
+      myView.changeScore(res['othelloArry'])
+      myView.reflectGameTurn(res['gameTurn'])
       console.log('Game turn is ' + res['gameTurn'])
     }else{
       alert('This cell is not available')
     }
-
   })
 }
 main()
