@@ -99,6 +99,12 @@ othello.prototype.checkRegression = function(dy,dx,y,x,player,turnCells){
 }
 
 othello.prototype.changeGameTurn = function(){
+
+  //possibleMoveが存在しない場合は手番の変更をせずにすぐさまreturnする
+  if(possibleMoves.length < 1){
+    return
+  }
+  
   if(this.gameTurn == 1){
     this.gameTurn = 2
   }else  if(this.gameTurn == 2){
@@ -156,10 +162,10 @@ othello.prototype.move = function(selectedPlace){
   if(this.validateMove(r['culunm'],r['row'])){
     //othelloArryの変更
     this.setOthelloArry(r['culunm'],r['row'])
-    //手番の変更
-    this.changeGameTurn()
     //次の可能な手を検索
     this.setPossibleMoves()
+    //手番の変更
+    this.changeGameTurn()
     response['isMove'] = true
     response['gameTurn'] = this.gameTurn
     response['possibleMoves'] = this.possibleMoves

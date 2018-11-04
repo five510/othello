@@ -39,14 +39,14 @@ othelloView.prototype.reflectNext = function(possibleMoves){
   }
 }
 
-othelloView.prototype.changeScore = function(){
+othelloView.prototype.changeScore = function(othelloArry){
   let countFirstPlayer = 0
   let countSecondPlayer = 0
   for(let i = 0 ; this.othelloNum > i ; i++){
     for(let j = 0 ; this.othelloNum > j ; j++){
-      if(this.othelloArry[i][j] == 1){
+      if(othelloArry[i][j] == 1){
         countFirstPlayer++
-      }else if(this.othelloArry[i][j] == 2){
+      }else if(othelloArry[i][j] == 2){
         countSecondPlayer++
       }
     }
@@ -74,4 +74,18 @@ othelloView.prototype.getColorFromNum = function(num){
   if(num == 1){ return 'white' }
   if(num == 2){ return 'black' }
   if(num == 3){ return 'lightgreen' }
+}
+
+
+othelloView.prototype.reflectGameTurn = function(gameTurn){
+  let currentPlayerClass = 'bold'
+  if(gameTurn == 1){
+    $('.firstPlayer').addClass(currentPlayerClass)
+    $('.secondPlayer').removeClass(currentPlayerClass)
+  }else if(gameTurn == 2){
+    $('.firstPlayer').removeClass(currentPlayerClass)
+    $('.secondPlayer').addClass(currentPlayerClass)
+  }else{
+    console.log('Reflect Game turn is failed. Maybe number of gameTurn is incorrect')
+  }
 }
