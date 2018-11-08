@@ -8,7 +8,7 @@ function main(){
   myView.reflectNext(myOthelo.possibleMoves)
   myView.changeScore(myOthelo.othelloArry)
   myView.reflectGameTurn(myOthelo.gameTurn)
-  //click時の振る舞いをかく
+  //Hard coding
   $('.othelloRow td').click(function(){
     let selectedPlace = $(this).attr('place')
     let res = myOthelo.move(selectedPlace)

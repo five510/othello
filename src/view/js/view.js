@@ -1,3 +1,7 @@
+/*
+盤面の情報を受け取ってhtmlとして描画するためのclass
+*/
+
 othelloView = function($el,othelloNum){
   this.$othelloBody = $el
   this.othelloNum = othelloNum

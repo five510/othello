@@ -1,4 +1,6 @@
-
+/*
+オセロのルールと現在の盤面の情報を制御するclass
+*/
 
 othello = function(othelloNum){
   this.othelloNum = othelloNum
@@ -101,10 +103,10 @@ othello.prototype.checkRegression = function(dy,dx,y,x,player,turnCells){
 othello.prototype.changeGameTurn = function(){
 
   //possibleMoveが存在しない場合は手番の変更をせずにすぐさまreturnする
-  if(possibleMoves.length < 1){
+  if(this.possibleMoves.length < 1){
     return
   }
-  
+
   if(this.gameTurn == 1){
     this.gameTurn = 2
   }else  if(this.gameTurn == 2){
