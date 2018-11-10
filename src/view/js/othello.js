@@ -104,13 +104,20 @@ othello.prototype.changeGameTurn = function(){
 
   //possibleMoveが存在しない場合は手番の変更をせずにすぐさまreturnする
   if(this.possibleMoves.length < 1){
+    console.log('Length of possibleMove is less than 1')
     return
   }
 
   if(this.gameTurn == 1){
     this.gameTurn = 2
+    console.log('黒の番です')
+    return
   }else  if(this.gameTurn == 2){
     this.gameTurn = 1
+    console.log('白の番です')
+    return
+  }else{
+    console.log('Some error happened.')
   }
 }
 
@@ -164,10 +171,10 @@ othello.prototype.move = function(selectedPlace){
   if(this.validateMove(r['culunm'],r['row'])){
     //othelloArryの変更
     this.setOthelloArry(r['culunm'],r['row'])
-    //次の可能な手を検索
-    this.setPossibleMoves()
     //手番の変更
     this.changeGameTurn()
+    //次の可能な手を検索
+    this.setPossibleMoves()
     response['isMove'] = true
     response['gameTurn'] = this.gameTurn
     response['possibleMoves'] = this.possibleMoves
