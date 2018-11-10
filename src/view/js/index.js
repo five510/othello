@@ -14,10 +14,9 @@ function main(){
     let res = myOthelo.move(selectedPlace)
     if(res['isMove']){
       myView.reflectViewothelloField(res['othelloArry'])
-      myView.reflectNext(res['possibleMoves'])
-      myView.changeScore(res['othelloArry'])
       myView.reflectGameTurn(res['gameTurn'])
-      console.log('Game turn is ' + res['gameTurn'])
+      myView.changeScore(res['othelloArry'])
+      myView.reflectNext(res['possibleMoves'])
     }else{
       alert('This cell is not available')
     }
