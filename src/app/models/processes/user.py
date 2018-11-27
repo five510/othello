@@ -20,7 +20,7 @@ class User:
     
     def user_create(self, username, mail, ipaddress, port, urlpath):
         self.db_handler.execute(self.INSERT_USER_QUERY,(username, mail, ipaddress, port, urlpath))
-        return None
+        return {}
 
     def update_user(self):
         pass

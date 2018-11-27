@@ -2,9 +2,21 @@ function log(){
     console.log('ok')
 }
 
-function main(){
+function bindEvent(api){
     let $el = $('#createUser')
-    $el.click(createUser)
+    $el.click(function(){
+        let requestData = getInputData()
+        api.createUser(requestData)
+            .then(function(result){
+                window.location.href = 'user.html'
+            })
+    })
+}
+
+
+function main(){
+    let api = new apiClient()
+    bindEvent(api)
 }
 
 function getInputData(){
@@ -18,7 +30,6 @@ function getInputData(){
 }
 
 function createUser(){
-    let requestData = getInputData()
     $.ajax({
         url: "/api/user/create",
         type: 'POST',

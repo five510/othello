@@ -4,6 +4,6 @@ CREATE TABLE IF NOT EXISTS othello_db.othelloUser (
     username varchar(255),
     mail varchar(255),
     ipaddress varchar(16),
-    port int,
+    port varchar(16),
     urlpath varchar(255)
 );
