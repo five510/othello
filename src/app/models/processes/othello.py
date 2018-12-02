@@ -16,40 +16,77 @@ class Othello:
         #TODO first_turnが1,2である事のvalidを入れる
         self._set_player_turn(first_turn)
         self._init_board()
-        return {
-            'nextOthelloBoard': self.othello_borad,
-            'nextTurn': self.player_turn,
-            'validation': {
-                'isValid': True,
-                'text': ''
-            }
+        validation_result = {
+            'isValid': True,
+            'text': ''
         }
+        is_skipped = False
+        is_finished = False
+        return self._get_output(validation_result,is_skipped,is_finished)
 
     def move(self,current_othello_board,next_move,current_turn):
         self._set_player_turn(current_turn)
         self._set_boad(current_othello_board)
         parsed_next_moved = self._parse_int_next_move(next_move)
-        if self._validate_possible_move(parsed_next_moved):
+        validation_result = {
+            'isValid': True,
+            'text': ''
+        }
+        is_skipped = False
+        is_finished = False
+        if self._validate_in_possible_move(parsed_next_moved):
+            '''入力がpossible moveの中にある場合'''
             self._reflect_move(parsed_next_moved)
-            return {
-                'nextOthelloBoard': self.othello_borad,
-                'nextTurn': self.player_turn,
-                'validation': {
-                    'isValid': True,
-                    'text': ''
-                }
-            }
+            if self._is_exist_possible_moves():
+                '''possible moveがある場合はそのままreturn/ない場合はplayerの変更を行う '''
+            else:
+                self._change_player()
+                is_skipped = True
+                if self._is_exist_possible_moves():
+                    '''possible moveがある場合はそのままreturn/ない場合はどちらのplayerも置けない状況なのでgame終了のflagを入れる '''
+                else:
+                    is_finished = True
         else:
-            return {
-                'nextOthelloBoard': current_othello_board,
-                'nextTurn': current_turn,
-                'validation': {
-                    'isValid': False,
-                    'text': 'next_move is not included possible moves. Please input correct cells'
-                }
-            }
+            validation_result['isValid'] = False
+            validation_result['text'] = 'next_move is not included possible moves. Please input correct cells'
+        
+        return self._get_output(validation_result,is_skipped,is_finished)
     
-    def _validate_possible_move(self,parsed_next_moved):
+    def _get_output(self,validation_result,is_skipped,is_finished):
+        white_count,black_count,possible_moves = self._get_board_summary()
+        return {
+            'nextOthelloBoard': self.othello_borad,
+            'nextTurn': self.player_turn,
+            'validation': validation_result,
+            'isSkipped': is_skipped,
+            'isFinished': is_finished,
+            'white': white_count,
+            'black': black_count,
+            'possibleMoves': possible_moves
+        }
+    
+    def _is_exist_possible_moves(self):
+        for x in range(len(self.othello_borad)):
+            for y in range(len(self.othello_borad[x])):
+                if self.othello_borad[x][y] == 9:
+                    return True
+        return False
+
+    def _get_board_summary(self):
+        white_count = 0
+        black_count = 0
+        possible_moves = 0
+        for x in range(len(self.othello_borad)):
+            for y in range(len(self.othello_borad[x])):
+                if self.othello_borad[x][y] == 9:
+                    possible_moves = possible_moves + 1
+                elif self.othello_borad[x][y] == 2:
+                    black_count = black_count + 1
+                elif self.othello_borad[x][y] == 1:
+                    white_count = white_count + 1
+        return white_count,black_count,possible_moves
+
+    def _validate_in_possible_move(self,parsed_next_moved):
         return self.othello_borad[parsed_next_moved['x']][parsed_next_moved['y']] == 9
     
     def _parse_int_next_move(self,next_move):
@@ -62,6 +99,7 @@ class Othello:
             self.player_turn = 2
         else:
             self.player_turn = 1
+        self._set_possible_moves()
 
     def _set_boad(self,current_othello_board):
         self.othello_borad = current_othello_board
@@ -115,10 +153,6 @@ class Othello:
             'turn_row': turn_candidate_x,
             'turn_column': turn_candidate_y
         })
-        '''
-        print('turn_candidate_x,turn_candidate_y',turn_candidate_x,turn_candidate_y)
-        print('length board',len(self.othello_borad))
-        '''
         if self._is_inner_cell_num(turn_candidate_x,turn_candidate_y) == False:
             #range(othelloNum)の範囲を超えている場合は空のリストを返す
             return []
@@ -157,7 +191,6 @@ class Othello:
         for turn_cell in around_eight_side_turn_cells:
             self.othello_borad[turn_cell['turn_row']][turn_cell['turn_column']] = self.player_turn
         self._change_player()
-        self._set_possible_moves()
 
 '''
 othello = Othello()

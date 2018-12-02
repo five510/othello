@@ -2,39 +2,27 @@
 <html>
 	<head>
 		<script src="/lib/jquery.min.js"></script>
+		<script src="/lib/bootstrap.min.js"></script>
 		<link href="/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/css/style.css" rel="stylesheet" />
 		<meta charset="utf-8">
 		<meta http-equiv="Pragma" content="no-cache">
 		<meta http-equiv="Cache-Control" content="no-cache">
 		<meta name="viewport" content="width=device-width">
-		<title>Othelo</title>
+		<title>Othello</title>
 	</head>
 	<body>
-		<div class="container">
-      <table>
-        <thead>
-      		<tr class="otheloHeader">
-      			<th></th>
-      			<th>a</th>
-      			<th>b</th>
-      			<th>c</th>
-      			<th>d</th>
-      			<th>e</th>
-      			<th>f</th>
-      			<th>g</th>
-      			<th>h</th>
-      	</tr>
-      </thead>
-	    <tbody class="otheloBody">
-	    </tbody>
-    </table>
-		<div>
-			white:<span class="firstPlayer"></span> - black:<span class="secondPlayer"></span>
+	<div class="row">
+		<div class="col-md-6">
+			<div class='gameOption'></div>
+			<div class='othelloBoard'></div>
+			<div class='othelloScore'></div>
+		</div>
+		<div class="col-md-6">
+			<div class ='resultsTable'></div>
 		</div>
 	</div>
 	<script src="/js/api.js"></script>
-	<script src="/js/othello-view.js"></script>
-	<script src="/js/othello-controller.js"></script>
+	<script src="/js/othello.js"></script>
 	</body>
 </html>

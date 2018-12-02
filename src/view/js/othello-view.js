@@ -1,9 +1,10 @@
 /*
 盤面の情報を受け取ってhtmlとして描画するためのclass
+< class = 'otheloBody'>に対応します
 */
 
-othelloView = function($el,othelloNum){
-  this.$othelloBody = $el
+othelloView = function(othelloNum){
+  this.$othelloBody = $('.otheloBody')
   this.othelloNum = othelloNum
   this.initothelloField()
 }
