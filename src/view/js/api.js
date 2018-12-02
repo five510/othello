@@ -45,13 +45,15 @@ apiClient.prototype.moveBoard = function(requestData){
 }
 
 apiClient.prototype.moveIntelligenceV1 = function(requestData){
+    console.log(requestData)
     return new Promise(function(resolve, reject){
         $.ajax({
-            url: "/api/othello-intelligence-v1",
+            url: "/api/dispather/othello",
             type: 'POST',
             dataType: 'json',
             contentType: 'application/json',
-            data: JSON.stringify(requestData)
+            data: JSON.stringify(requestData),
+            async: false
             /*
             JSON.stringify({
             'current_othello_board': [[0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0,9, 0, 0, 0], [0, 0, 0, 1, 2, 9, 0, 0], [0, 0, 9, 2, 1, 0, 0, 0], [0, 0, 0, 9,0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0]],
@@ -65,7 +67,7 @@ apiClient.prototype.moveIntelligenceV1 = function(requestData){
         }).done(function(result) {
           resolve(result)
         }).fail(function(result) {
-          console.log('[ERROR] /api/othello-move is failed')
+          console.log('[ERROR] /api/dispather/othello is failed')
           reject(result)
         });
     })
@@ -115,6 +117,26 @@ apiClient.prototype.createUser = function(requestData){
             console.log("textStatus     : " + textStatus);
             console.log("errorThrown    : " + errorThrown.message);
             console.log('[ERROR] /api/user/create is failed')
+            reject(result)
+          });
+    })
+}
+
+apiClient.prototype.getAllHistoryInfo = function(requestData){
+    return new Promise(function(resolve, reject){
+        $.ajax({
+            url: "/api/history/describe",
+            type: 'POST',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify(requestData)
+          }).done(function(result){
+            resolve(result)
+          }).fail(function(result,XMLHttpRequest, textStatus, errorThrown) {
+            console.log("XMLHttpRequest : " + XMLHttpRequest.status);
+            console.log("textStatus     : " + textStatus);
+            console.log("errorThrown    : " + errorThrown.message);
+            console.log('[ERROR] /api/history/describe is failed')
             reject(result)
           });
     })

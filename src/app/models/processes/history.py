@@ -8,7 +8,7 @@ class History:
         'winUserId'
     ]
     INSERT_HISTORY_QUERY = 'INSERT INTO othelloHistory (firstUserId, passiveUserId, winUserId) VALUES (%s, %s, %s)'
-    
+    SELECT_HISTORY_QUERY = 'SELECT * FROM othelloHistory'
     def __init__(self):
         self.db_handler = db.DB_handle()
     
@@ -17,4 +17,10 @@ class History:
         return {}
     
     def history_describe(self):
-        pass
+        self.db_handler.execute(self.SELECT_HISTORY_QUERY)
+        historys = []
+        for selected_history in self.db_handler.fetch_all():
+            history = { self.TABLE[i]: selected_history[i] for i in range(len(self.TABLE)) }
+            historys.append(history)
+        return {'history':historys}
+        

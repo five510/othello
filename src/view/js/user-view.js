@@ -30,7 +30,6 @@ userView.prototype.initUserTable = function(users){
         $userTbody.append($userTr)
     }
     $table.append($userTbody)
-    console.log()
     this.$userTable.append($table)
 }
 

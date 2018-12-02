@@ -19,7 +19,8 @@ class Othello_intelligence:
             'x': x,
             'y': y
         }
-        return self.othello_model.move(self.current_othello_board,next_move,self.current_turn)
+        return next_move
+        #return self.othello_model.move(self.current_othello_board,next_move,self.current_turn)
 
     def not_intelligence(self):
         for x in range(len(self.current_othello_board)):

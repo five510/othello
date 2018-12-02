@@ -19,3 +19,7 @@ def history_create():
     #TODO validationをかけるようにする
     result = history_model.user_create(first_user_id,passive_user_id,win_user_id)
     return result
+
+@route('/api/history/describe',method='POST')
+def history_describe():
+    return history_model.history_describe()
