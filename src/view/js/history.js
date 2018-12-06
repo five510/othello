@@ -1,5 +1,9 @@
-historyView = function($el){
-    this.$historyTable = $el
+/*
+historyTable classに対応します
+*/
+
+historyView = function(){
+    this.$historyTable = $('.historyTable')
 }
 
 historyView.prototype.initHistoryTable = function(historys){
@@ -26,3 +30,17 @@ historyView.prototype.initHistoryTable = function(historys){
     $table.append($historyTbody)
     this.$historyTable.append($table)
 }
+
+function init(view,api){
+    api.getAllHistoryInfo({}).then(function(result){
+        console.log(result)
+        view.initHistoryTable(result['history'])
+      })
+}
+
+function main(){
+    let myHistoryView = new historyView()
+    let api = new apiClient()
+    init(myHistoryView,api)
+}
+main()

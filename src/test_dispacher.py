@@ -10,7 +10,7 @@ class dispatcherLocalCase(unittest.TestCase):
     """
     def test_dispatch(self):
         
-        user_id = 11
+        user_id = 1
         current_board = [
                 [0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0], 

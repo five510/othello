@@ -33,7 +33,7 @@ class Dispather:
         req = urllib.request.Request(url, json.dumps(request_data).encode(), headers)
         print('Http request to {}.....'.format(url))
         with urllib.request.urlopen(req) as res:
-            next_move = res.read()
+            next_move = json.loads(res.read())
             print(next_move)
         print('[Finished!!] Http request to {}'.format(url))
         return next_move

@@ -53,6 +53,7 @@ apiClient.prototype.moveIntelligenceV1 = function(requestData){
             dataType: 'json',
             contentType: 'application/json',
             data: JSON.stringify(requestData),
+            timeout: 10000,
             async: false
             /*
             JSON.stringify({
