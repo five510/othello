@@ -10,6 +10,11 @@ Player = function(order,userId,name){
   this.name = name
 }
 
+Stone = function(){
+  this.WHITE = 1
+  this.BLACK =2
+}
+
 Player.prototype.getPlayer = function(){
   return {
     'order': this.order,
@@ -23,6 +28,7 @@ othelloController = function(){
   this.otheloNum = 8
   this.board = new Board(this.first_player)
   this.view = new othelloView(this.otheloNum)
+  this.stone = new Stone()
   this.api = new apiClient()
   this.players = []
   this.init()
@@ -42,18 +48,55 @@ othelloController.prototype.setPlayers = function(userA,userB){
     new Player(1,userA['userId'],userA['userName']),
     new Player(2,userB['userId'],userB['userName'])
   ]
-  $(window).trigger('gameController',[null])
 }
 
-othelloController.prototype.restart = function(){
+othelloController.prototype.dispatchEvents = function(){
+  for(let i in this.players){
+    if(this.players[i].userId == 0){
+      this.manualPlayStart()
+      return
+    }
+  }
+  $(window).trigger('gameAutoPlayController',[null])
+}
+
+othelloController.prototype.getOppositePlayer = function(){
+  for(let i in this.players){
+    if(this.players[i].order == this.stone.WHITE ){
+      return 'black'
+    } else if (this.players[i].order == this.stone.BLACK){
+      return 'white'
+    }
+  }
+}
+
+othelloController.prototype.autoPlayStart = function(){
   this.board = new Board(this.first_player)
   let firstRequest = {
     'first_turn': this.board.player
   }
   this.api.getInitBoard(firstRequest).then( (result) => {
     this.changeBoardSituation(result)
-    this.intelligenceActionV1()
+    this.loopIntelligenceAction()
   })
+}
+
+othelloController.prototype.manualPlayStart = function(){
+  this.board = new Board(this.first_player)
+  let firstRequest = {
+    'first_turn': this.board.player
+  }
+  this.api.getInitBoard(firstRequest).then( (result) => {
+    this.changeBoardSituation(result)
+    this.view.cellEnvet()
+    this.nextAction()
+  })
+}
+
+othelloController.prototype.nextAction = function(){
+  if(this.isCurrentPlayerAuto()){
+    this.intelligenceAction()
+  }
 }
 
 othelloController.prototype.changePlayerOrder = function(){
@@ -66,6 +109,18 @@ othelloController.prototype.changePlayerOrder = function(){
   }
 }
 
+othelloController.prototype.isCurrentPlayerAuto = function(){
+  for(let i in this.players){
+    if(this.board.player == this.players[i].order){
+      if(this.players[i].userId != 0){
+        return true
+      }else{
+        return false
+      }
+    } 
+  }
+}
+
 
 othelloController.prototype.changeBoardSituation = function(apiOthelloResult){
   this.board.board = apiOthelloResult['nextOthelloBoard']
@@ -75,7 +130,7 @@ othelloController.prototype.changeBoardSituation = function(apiOthelloResult){
   this.view.reflectGameTurn(this.board.player)
 }
 
-othelloController.prototype.intelligenceActionV1 = function(){
+othelloController.prototype.loopIntelligenceAction = function(){
   for(let i in this.players){
     if(this.board.player == this.players[i].order){
       userId = this.players[i].userId
@@ -93,12 +148,42 @@ othelloController.prototype.intelligenceActionV1 = function(){
       if(result['isFinished']){
         //alert('finished!!!!!')
         this.board.isFinish = true
-        $(window).trigger('gameController',[this.getResult(result)])
+        $(window).trigger('gameAutoPlayController',[this.getResult(result)])
       }else if(result['isSkipped']){
-        console.log('Skipped')
-        this.intelligenceActionV1()
+        console.log(`Player ${this.getOppositePlayer()} is Skipped!!!!!`)
+        this.loopIntelligenceAction()
       }else{
-        this.intelligenceActionV1()
+        this.loopIntelligenceAction()
+      }
+    }else{
+      alert(result['validation']['text'])
+      return false
+    }
+  }) 
+}
+
+othelloController.prototype.intelligenceAction = function(){
+  for(let i in this.players){
+    if(this.board.player == this.players[i].order){
+      userId = this.players[i].userId
+    }
+  }
+  let requestData = {
+    'current_turn': this.board.player,
+    'current_othello_board': this.board.board,
+    'user_id': userId
+  }
+  this.api.moveIntelligenceV1(requestData).then( (result) => {
+    console.log(result)
+    if(result['validation']['isValid']){
+      this.changeBoardSituation(result)
+      if(result['isFinished']){
+        alert('finished!!!!!')
+        this.board.isFinish = true
+      }else if(result['isSkipped']){
+        alert(`Player ${this.getOppositePlayer()} is Skipped!!!!!`)
+        console.log('Skipped')
+      }else{
       }
     }else{
       alert(result['validation']['text'])
@@ -114,7 +199,7 @@ othelloController.prototype.personAction = function(result){
       alert('finished!!!!!')
       return false
     }else if(result['isSkipped']){
-      alert('Skipped!!!!!')
+      alert(`Player ${this.getOppositePlayer()} is Skipped!!!!!`)
       return false
     }else{
       return true
@@ -257,6 +342,14 @@ othelloView.prototype.reflectGameTurn = function(gameTurn){
   }
 }
 
+othelloView.prototype.cellEnvet = function(){
+  $('.othelloRow td').click(function(){
+    let x = $(this).attr('x')
+    let y = $(this).attr('y')
+    $(window).trigger( 'gameManualPlayController',[x,y])
+  })
+}
+
 resultController = function(){
   this.results = []
   this.view = new resultView()
@@ -271,9 +364,14 @@ resultController.prototype.addResult = function(result){
 }
 
 resultView = function(){
-  this.$resultsTable = $('.resultsTable')
+  this.$othelloResult = $('.othelloResult')
   this.WHITE = 1
   this.BLACK = 2
+  this.initTitle()
+}
+
+resultView.prototype.initTitle = function(){
+  this.$othelloResult.append($('<h2>Othello Results</h2>'))
 }
 
 resultView.prototype.parseResultsContents = function(results){
@@ -307,7 +405,8 @@ resultView.prototype.parseResultsContents = function(results){
 
 
 resultView.prototype.initresultsTable = function(results){
-  this.$resultsTable.empty()
+  this.$othelloResult.empty()
+  this.initTitle()
   let resultsContents = this.parseResultsContents(results)
   console.log(resultsContents)
   let $table = $('<table class="table table-striped"></table>')
@@ -324,7 +423,7 @@ resultView.prototype.initresultsTable = function(results){
       $resultsTbody.append($resultTr)
   }
   $table.append($resultsTbody)
-  this.$resultsTable.append($table)
+  this.$othelloResult.append($table)
 }
 
 gameOptionController = function(){
@@ -334,9 +433,17 @@ gameOptionController = function(){
 }
 
 gameOptionController.prototype.initGameOption = function(){
-  this.api.getAllUserInfo({}).then( (result) =>
+  this.api.getAllUserInfo({}).then( (result) => {
+    result['users'].unshift({
+      'id': 0,
+      'username': 'manual',
+      'mail': '',
+      'ipaddress': '',
+      'port': '',
+      'urlpath': ''
+    })
     this.view.initGameOption(result['users'])
-  )
+  })
 }
 
 gameOptionView = function(){
@@ -409,20 +516,35 @@ gameController = function(){
 }
 
 gameController.prototype.customEvent = function(){
-  $(window).on('gameController', (event,othelloResult) => {
+  $(window).on('gameAutoPlayController', (event,othelloResult) => {
     if(othelloResult){
       console.log(othelloResult)
       this.myResultController.addResult(othelloResult)
     }
     if(this.count < this.gameNum){
-      this.myOthelloController.restart()
+      this.myOthelloController.autoPlayStart()
       this.count++
     }
   });
+
+  $(window).on('gameManualPlayController', (event,x,y) => {
+    let requestData = this.myOthelloController.getRequestData(x,y)
+    this.myOthelloController.api.moveBoard(requestData)
+    .then( (result) =>
+      this.myOthelloController.personAction(result)
+    )
+    .then( (result) => {
+      if(result){
+        this.myOthelloController.nextAction()
+      }
+    })
+  });
+
   $(window).on('setOthelloControllerUser', (event,whiteUser,blackUser,gameNum) => {
     this.gameNum = gameNum
-    console.log(this.gameNum)
+    console.log(`[INFO] Set ${this.gameNum} Games`)
     this.myOthelloController.setPlayers(whiteUser,blackUser)
+    this.myOthelloController.dispatchEvents()
   });
 }
 
@@ -431,25 +553,6 @@ function main(){
   let myGameOptionController = new gameOptionController()
   let myGameController = new gameController()
   myGameController.customEvent()
-  //bindEvent(myOthelloController)
-}
-
-//一人プレイ用に必要な関数
-function bindEvent(othelloController){
-  $('.othelloRow td').click(function(){
-    let x = $(this).attr('x')
-    let y = $(this).attr('y')
-    let requestData = othelloController.getRequestData(x,y)
-    othelloController.api.moveBoard(requestData)
-    .then( (result) =>
-      othelloController.personAction(result)
-    )
-    .then( (result) => {
-      if(result){
-        othelloController.intelligenceActionV1(false)
-      }
-    })
-  })
 }
 
 main()
