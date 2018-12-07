@@ -23,6 +23,9 @@ class Othello_intelligence:
         #return self.othello_model.move(self.current_othello_board,next_move,self.current_turn)
 
     def not_intelligence(self):
+        '''
+        配列のはじめに発見した 置けるマスを返します
+        '''
         for x in range(len(self.current_othello_board)):
             for y in range(len(self.current_othello_board[x])):
                 if self.current_othello_board[x][y] == 9:
