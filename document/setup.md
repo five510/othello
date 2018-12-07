@@ -122,7 +122,7 @@ output
 
 ```
 
-### 7.テスト方法
+### 7.テスト方法 by スクリプト
 
 1. `test_dispacher.py`と`test_othello.py`を実行しましょう
 ```
@@ -130,6 +130,9 @@ cd ~/environment/src
 python3 test_dispacher.py
 test_othello.py
 ```
+### 7.テスト方法 by 手動
+webブラウザから実際にオセロとして戦ってみましょう。
+
 
 # ローカルで開発する場合
 
