@@ -1,3 +1,11 @@
+/*
+以下のセレクターに対応します
+<div class='gameOption'></div>
+<div class='othelloBoard'></div>
+<div class='othelloScore'></div>
+<div class ='othelloResult'></div>
+*/
+
 Board = function(firstPlayer){
   this.board = []
   this.player = firstPlayer
