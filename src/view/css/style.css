@@ -16,18 +16,22 @@
 
 .white-stone{
   background: white;
-  margin: 2px;
-  width: 45px;
-  height: 45px;
+  margin: 4px;
+  width: 41px;
+  height: 41px;
   border-radius: 45px;
+  border: solid 1px #bbb;
+  box-shadow: 3px 3px 3px;
 }
 
 .black-stone{
   background: black;
-  margin: 2px;
-  width: 45px;
-  height: 45px;
+  margin: 4px;
+  width: 41px;
+  height: 41px;
   border-radius: 45px;
+  border: solid 1px #333;
+  box-shadow: 3px 3px 3px;
 }
 
 .white{
