@@ -53,18 +53,7 @@ apiClient.prototype.moveIntelligenceV1 = function(requestData){
             dataType: 'json',
             contentType: 'application/json',
             data: JSON.stringify(requestData),
-            timeout: 10000,
-            async: false
-            /*
-            JSON.stringify({
-            'current_othello_board': [[0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0,9, 0, 0, 0], [0, 0, 0, 1, 2, 9, 0, 0], [0, 0, 9, 2, 1, 0, 0, 0], [0, 0, 0, 9,0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0]],
-            'next_move': {
-            'row_num': 2,
-            'column_num': 4
-            },
-            'current_turn': 1
-        })
-            */
+            timeout: 10000
         }).done(function(result) {
           resolve(result)
         }).fail(function(result) {
