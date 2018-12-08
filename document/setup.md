@@ -37,7 +37,7 @@ python3 main.py &
 
 1. console上に表示される標準出力を見る
 2. web上から確認する
-    - http://{yourip}:8080/html/othell.thml
+    - http://{yourip}:8080/html/othello.html
     - ヘッダーの上の`preview`から確認
 
 ### 3.othelloの操作方法
