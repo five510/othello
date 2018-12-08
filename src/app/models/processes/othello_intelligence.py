@@ -5,6 +5,16 @@ class Othello_intelligence:
     Othello intelligence class provide next better move
     '''
     N = 10  # 奇数に設定
+    scoring = [
+        [10, -10 , -5, 0, 0, -5, -10, 10],
+        [-10, -10, 0, 5, 5, 0, -10, -10], 
+        [-5 , 0  , 5, 10, 10, 5, 0, -5], 
+        [0  , 5  , 10, 10, 10, 10, 5, 0], 
+        [0  , 5  , 10, 10, 10, 10, 5, 0], 
+        [-5 , 0  , 0, 10, 10, 5, 0, -5], 
+        [-10, -10, 0, 5, 5, 0, -10, -10], 
+        [10, -10 , -5, 0, 0, -5, -10, 10]
+    ]
     def __init__(self):
         self.othello_model = othello.Othello()
         self.current_othello_board = []
@@ -49,7 +59,7 @@ class Othello_intelligence:
                     move_result = self.othello_model.move(copy.deepcopy(current_board),next_move,copy.deepcopy(current_turn))
                     if move_result['isFinished']:
                         return next_move['x'],next_move['y']
-                    evaluate_score = self.evaluate(move_result)
+                    evaluate_score = self.evaluate(move_result) + self.scoring[x][y]
                     print('Evaluate value is {}'.format(evaluate_score))
                     if evaluate_score > max_eva['eva_score']:
                         max_eva = {
