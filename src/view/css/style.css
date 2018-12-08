@@ -14,12 +14,28 @@
   border: solid 1px lightgrey;
 }
 
-.white{
+.white-stone{
   background: white;
+  margin: 2px;
+  width: 45px;
+  height: 45px;
+  border-radius: 45px;
+}
+
+.black-stone{
+  background: black;
+  margin: 2px;
+  width: 45px;
+  height: 45px;
+  border-radius: 45px;
+}
+
+.white{
+  background: green;
 }
 
 .black{
-  background: black;
+  background: green;
 }
 
 .green{
