@@ -149,7 +149,8 @@ othelloController.prototype.loopIntelligenceAction = function(){
     'current_othello_board': this.board.board,
     'user_id': userId
   }
-  this.api.moveIntelligenceV1(requestData).then( (result) => {
+  this.api.moveIntelligenceV1(requestData)
+  .then( (result) => {
     console.log(result)
     if(result['validation']['isValid']){
       this.changeBoardSituation(result)
@@ -167,7 +168,10 @@ othelloController.prototype.loopIntelligenceAction = function(){
       alert(result['validation']['text'])
       return false
     }
-  }) 
+  })
+  .catch( (result)=>{
+    alert('Api is failed.Please exec in 10s and check your api logic')
+  })
 }
 
 othelloController.prototype.intelligenceAction = function(){
