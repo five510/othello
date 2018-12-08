@@ -325,9 +325,15 @@ othelloView.prototype.reflectViewothelloField = function(othelloArry){
     let eachCells = $(rows[i]).children()
     // when j == 0 , return th. so j start 1
     for(let j = 1 ; eachCells.length+1 >j ; j++){
-      $(eachCells[j]).removeClass()
-      $(eachCells[j]).addClass(
-        this.getColorFromNum(othelloArry[i][j-1])
+      var cell = $(eachCells[j])
+      var num = othelloArry[i][j-1]
+      cell.removeClass()
+      cell.addClass(
+        this.getColorFromNum(num)
+      )
+      cell.empty()
+      cell.append(
+        this.getStone(num)
       )
     }
   }
@@ -338,6 +344,17 @@ othelloView.prototype.getColorFromNum = function(num){
   if(num == 1){ return 'white' }
   if(num == 2){ return 'black' }
   if(num == 9){ return 'lightgreen' }
+}
+
+othelloView.prototype.getStone = function(num){
+  var div = document.createElement('div')
+  if(num == 1){ 
+    div.className = 'white-stone'
+  }
+  if(num == 2){ 
+    div.className = 'black-stone'
+  }
+  return div
 }
 
 
