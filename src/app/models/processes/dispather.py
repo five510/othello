@@ -19,7 +19,8 @@ class Dispather:
             move = self.othello_intelligence_model.move(current_othello_board,current_turn)
         else:
             url = self.user_model.get_url(user)
-            move = self.get_move_http(url,current_othello_board,current_turn)    
+            move = self.get_move_http(url,current_othello_board,current_turn)
+        print(move)
         return self.othello_model.move(current_othello_board,move,current_turn)
 
     def get_move_http(self,url,current_othello_board,current_turn):

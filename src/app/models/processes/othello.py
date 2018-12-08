@@ -49,7 +49,7 @@ class Othello:
         else:
             validation_result['isValid'] = False
             validation_result['text'] = 'next_move is not included possible moves. Please input correct cells'
-        
+        #print(current_othello_board)
         return self._get_output(validation_result,is_skipped,is_finished)
     
     def _get_output(self,validation_result,is_skipped,is_finished):
