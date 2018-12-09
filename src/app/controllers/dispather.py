@@ -12,7 +12,7 @@ dispather_model = dispather.Dispather()
 
 @route('/api/dispather/othello',method='POST')
 def history_create():
-    print('request.json',request.json)
+    #print('request.json',request.json)
     user_id = int(request.json.get('user_id'))
     current_othello_board = request.json.get('current_othello_board')
     current_turn = request.json.get('current_turn')

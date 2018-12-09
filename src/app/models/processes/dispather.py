@@ -20,7 +20,6 @@ class Dispather:
         else:
             url = self.user_model.get_url(user)
             move = self.get_move_http(url,current_othello_board,current_turn)
-        print(move)
         return self.othello_model.move(current_othello_board,move,current_turn)
 
     def get_move_http(self,url,current_othello_board,current_turn):
@@ -32,11 +31,8 @@ class Dispather:
             'Content-Type': 'application/json',
         }
         req = urllib.request.Request(url, json.dumps(request_data).encode(), headers)
-        print('Http request to {}.....'.format(url))
         with urllib.request.urlopen(req) as res:
             next_move = json.loads(res.read())
-            print(next_move)
-        print('[Finished!!] Http request to {}'.format(url))
         return next_move
 
 

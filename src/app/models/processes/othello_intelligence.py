@@ -4,7 +4,7 @@ class Othello_intelligence:
     '''
     Othello intelligence class provide next better move
     '''
-    N = 25  # 奇数に設定
+    N = 15  # 奇数に設定
     scoring = [
         [10, -100 , -5, 0, 0, -5, -100, 10],
         [-100, -100, 2, 5, 5, 2, -100, -100], 
@@ -55,17 +55,18 @@ class Othello_intelligence:
                         'x': x,
                         'y': y
                     }
-                    print('Start Evaluate ({},{})'.format(next_move['x'],next_move['y']))
+                    #print('Start Evaluate ({},{})'.format(next_move['x'],next_move['y']))
                     move_result = self.othello_model.move(copy.deepcopy(current_board),next_move,copy.deepcopy(current_turn))
                     if move_result['isFinished']:
                         return next_move['x'],next_move['y']
                     evaluate_score = self.evaluate(move_result) + self.scoring[x][y]
-                    print('Evaluate value is {}'.format(evaluate_score))
+                    #print('Evaluate value is {}'.format(evaluate_score))
                     if evaluate_score > max_eva['eva_score']:
                         max_eva = {
                             'move': next_move,
                             'eva_score':evaluate_score
                         }
+        print('max_eva is {}'.format(max_eva['eva_score']))    
         return max_eva['move']['x'],max_eva['move']['y']
     
     def evaluate(self,previous_move,count=0):
@@ -117,12 +118,18 @@ class Othello_intelligence:
                 if self.current_turn == possible['nextTurn']:
                     eva_score = possible['possibleMoves'] - previous_move['possibleMoves'] + self.scoring[move['x']][move['y']]
                 else:
-                    eva_score = previous_move['possibleMoves'] - possible['possibleMoves'] + self.scoring[move['x']][move['y']]
+                    eva_score = previous_move['possibleMoves'] - possible['possibleMoves'] + self.scoring[move['x']][move['y']] 
                 
+                if self.is_contain_get_corner(possible):
+                    eva_score = eva_score - 100
+
                 if max_eva['eva_score'] < eva_score:
                     max_eva['possible_move'] = possible
                     max_eva['eva_score'] = eva_score
         return max_eva
+    
+    def is_contain_get_corner(self,possible):
+        return possible['nextOthelloBoard'][0][0] == 9 or possible['nextOthelloBoard'][0][7] == 9 or possible['nextOthelloBoard'][7][0] == 9 or possible['nextOthelloBoard'][7][7] == 9
 
     def all_possible_boards(self,othello_board,current_turn,isprint=False):
         all_possible_boards =[]
