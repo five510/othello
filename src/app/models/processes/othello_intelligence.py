@@ -4,16 +4,16 @@ class Othello_intelligence:
     '''
     Othello intelligence class provide next better move
     '''
-    N = 10  # 奇数に設定
+    N = 25  # 奇数に設定
     scoring = [
-        [10, -10 , -5, 0, 0, -5, -10, 10],
-        [-10, -10, 0, 5, 5, 0, -10, -10], 
-        [-5 , 0  , 5, 10, 10, 5, 0, -5], 
+        [10, -100 , -5, 0, 0, -5, -100, 10],
+        [-100, -100, 2, 5, 5, 2, -100, -100], 
+        [-5 , 2  , 5, 10, 10, 5, 2, -5], 
         [0  , 5  , 10, 10, 10, 10, 5, 0], 
         [0  , 5  , 10, 10, 10, 10, 5, 0], 
-        [-5 , 0  , 0, 10, 10, 5, 0, -5], 
-        [-10, -10, 0, 5, 5, 0, -10, -10], 
-        [10, -10 , -5, 0, 0, -5, -10, 10]
+        [-5 , 2  , 2, 10, 10, 5,2, -5], 
+        [-100, -100, 2, 5, 5, 2, -100, -100], 
+        [10, -100 , -5, 0, 0, -5, -100, 10]
     ]
     def __init__(self):
         self.othello_model = othello.Othello()
@@ -68,27 +68,25 @@ class Othello_intelligence:
                         }
         return max_eva['move']['x'],max_eva['move']['y']
     
-    def evaluate(self,move_result,count=0):
+    def evaluate(self,previous_move,count=0):
         '''
         一つの可能な手の評価をします
         '''
 
-        all_possible_boards = self.all_possible_boards(copy.deepcopy(move_result['nextOthelloBoard']),copy.deepcopy(move_result['nextTurn']))
-        min_possible = self.get_min_possibles(all_possible_boards)
+        all_possible_boards,moves = self.all_possible_boards(copy.deepcopy(previous_move['nextOthelloBoard']),copy.deepcopy(previous_move['nextTurn']))
+        #min_possible = self.get_min_possibles(all_possible_boards)
+        max_eva = self.get_good_evaluate(all_possible_boards,moves,previous_move)
         '''
         self.print_b(min_possible['nextOthelloBoard'])
         print('Player {} possible moves is {}'.format(move_result['nextTurn'],move_result['possibleMoves']))
         print('Player {} possible moves is {}'.format(min_possible['nextTurn'],min_possible['possibleMoves']))
         print('-----------------------------')
         '''
-        if self.N > count and not min_possible['isFinished']:
+        if self.N > count and not max_eva['possible_move']['isFinished']:
             count = count + 1
-            return self.evaluate(min_possible,count)
+            return self.evaluate(max_eva['possible_move'],count)
         else:
-            if self.current_turn == min_possible['nextTurn']:
-                return min_possible['possibleMoves'] - move_result['possibleMoves']
-            else:
-                return move_result['possibleMoves'] - min_possible['possibleMoves']
+            return max_eva['eva_score']
         
 
     def get_max_possibles(self,all_possible_boards):
@@ -108,9 +106,27 @@ class Othello_intelligence:
                 min = possible['possibleMoves']
                 min_possible = possible
         return min_possible
+    
+    def get_good_evaluate(self,all_possible_boards,moves,previous_move):
+        max_eva = {
+            'possible_move': None,
+            'eva_score':-999
+        }
+        for possible in all_possible_boards:
+            for move in moves:
+                if self.current_turn == possible['nextTurn']:
+                    eva_score = possible['possibleMoves'] - previous_move['possibleMoves'] + self.scoring[move['x']][move['y']]
+                else:
+                    eva_score = previous_move['possibleMoves'] - possible['possibleMoves'] + self.scoring[move['x']][move['y']]
+                
+                if max_eva['eva_score'] < eva_score:
+                    max_eva['possible_move'] = possible
+                    max_eva['eva_score'] = eva_score
+        return max_eva
 
     def all_possible_boards(self,othello_board,current_turn,isprint=False):
         all_possible_boards =[]
+        moves = []
         for x in range(len(othello_board)):
             for y in range(len(othello_board[x])):
                 if othello_board[x][y] == 9:
@@ -121,7 +137,8 @@ class Othello_intelligence:
                     if isprint:
                         print('Current Player:{} Move x:{} y:{}'.format(current_turn,next_move['x'],next_move['y']))
                     all_possible_boards.append(self.othello_model.move(copy.deepcopy(othello_board),next_move,copy.deepcopy(current_turn)))
-        return all_possible_boards
+                    moves.append(next_move)
+        return all_possible_boards,moves
     
     def print_b(self,b):
         for e in b:
