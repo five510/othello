@@ -6,14 +6,14 @@ class Othello_intelligence:
     '''
     N = 15  # 奇数に設定
     scoring = [
-        [10, -100 , -5, 0, 0, -5, -100, 10],
-        [-100, -100, 2, 5, 5, 2, -100, -100], 
-        [-5 , 2  , 5, 10, 10, 5, 2, -5], 
+        [100, -10 , 30, 0, 0, 30, -10, 100],
+        [-10, -10, 2, 5, 5, 2, -10, -10], 
+        [30, 2  , 15, 10, 10, 15, 2, -5], 
         [0  , 5  , 10, 10, 10, 10, 5, 0], 
         [0  , 5  , 10, 10, 10, 10, 5, 0], 
-        [-5 , 2  , 2, 10, 10, 5,2, -5], 
-        [-100, -100, 2, 5, 5, 2, -100, -100], 
-        [10, -100 , -5, 0, 0, -5, -100, 10]
+        [30 , 2  , 15, 10, 10,  15,2, -5], 
+        [-10, -10, 2, 5, 5, 2, -10, -10], 
+        [100, -10 , 30, 0, 0, 30, -10, 10]
     ]
     def __init__(self):
         self.othello_model = othello.Othello()
@@ -111,7 +111,7 @@ class Othello_intelligence:
     def get_good_evaluate(self,all_possible_boards,moves,previous_move):
         max_eva = {
             'possible_move': None,
-            'eva_score':-999
+            'eva_score':-999999
         }
         for possible in all_possible_boards:
             for move in moves:
@@ -121,7 +121,7 @@ class Othello_intelligence:
                     eva_score = previous_move['possibleMoves'] - possible['possibleMoves'] + self.scoring[move['x']][move['y']] 
                 
                 if self.is_contain_get_corner(possible):
-                    eva_score = eva_score - 100
+                    eva_score = eva_score - 1000
 
                 if max_eva['eva_score'] < eva_score:
                     max_eva['possible_move'] = possible
