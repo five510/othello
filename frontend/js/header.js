@@ -1,12 +1,10 @@
 navigationView = function(){
 	this.$othelloNavigation = $('.othelloNavigation')
 	this.title = 'Othello'
-	this.mainPath = 'othello.html'
+	this.mainPath = 'index.html'
 	this.menus = [
-		new menu('Othello','othello.html'),
-		new menu('User','user.html'),
-		new menu('New User','user-edit.html'),
-		new menu('History','history.html')
+		new menu('Othello','index.html'),
+		new menu('Code','sourcecode.html'),
 	]
 }
 

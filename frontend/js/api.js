@@ -48,7 +48,7 @@ apiClient.prototype.moveIntelligenceV1 = function(requestData){
     console.log(requestData)
     return new Promise(function(resolve, reject){
         $.ajax({
-            url: "/api/dispather/othello",
+            url: "/api/othello/autoplay/next",
             type: 'POST',
             dataType: 'json',
             contentType: 'application/json',
@@ -84,6 +84,38 @@ apiClient.prototype.getAllUserInfo = function(requestData){
             reject(result)
           });
     })
+}
+
+apiClient.prototype.getAllSourcecode = function(){
+  return new Promise(function(resolve, reject){
+      $.ajax({
+          url: "/api/soucecode/all",
+          type: 'GET',
+          dataType: 'json',
+          contentType: 'application/json',
+        }).done(function(result){
+          resolve(result)
+        }).fail(function(result) {
+          console.log('[ERROR] /api/user/describe is failed')
+          reject(result)
+        });
+  })
+}
+
+apiClient.prototype.getSourcecodeDetail = function(sourceCodeId){
+  return new Promise(function(resolve, reject){
+      $.ajax({
+          url: "/api/soucecode/" + sourceCodeId + "/detail",
+          type: 'GET',
+          dataType: 'json',
+          contentType: 'application/json',
+        }).done(function(result){
+          resolve(result)
+        }).fail(function(result) {
+          console.log('[ERROR] /api/user/describe is failed')
+          reject(result)
+        });
+  })
 }
 
 apiClient.prototype.createUser = function(requestData){

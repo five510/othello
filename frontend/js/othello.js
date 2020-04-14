@@ -147,7 +147,7 @@ othelloController.prototype.loopIntelligenceAction = function(){
   let requestData = {
     'current_turn': this.board.player,
     'current_othello_board': this.board.board,
-    'user_id': userId
+    'souce_code_id': userId
   }
   this.api.moveIntelligenceV1(requestData)
   .then( (result) => {
@@ -183,7 +183,7 @@ othelloController.prototype.intelligenceAction = function(){
   let requestData = {
     'current_turn': this.board.player,
     'current_othello_board': this.board.board,
-    'user_id': userId
+    'souce_code_id': userId
   }
   this.api.moveIntelligenceV1(requestData).then( (result) => {
     console.log(result)
@@ -475,6 +475,65 @@ gameOptionController.prototype.initGameOption = function(){
   })
 }
 
+gameSourcecodeController = function(){
+  this.api = new apiClient()
+  this.view = new gameSourcecodeView()
+  this.init()
+}
+
+gameSourcecodeController.prototype.init = function(){
+  this.api.getAllSourcecode().then( (sourceCodeInfos) => {
+    this.view.init(sourceCodeInfos)
+  })
+}
+
+gameSourcecodeView = function(){
+  this.$whiteSourceCode = $('.whiteSourceCode')
+  this.$blackSourceCode = $('.blackSourceCode')
+  this.$othelloStartButton = $('#othelloStart')
+  this.WHITE = 1
+  this.BLACK = 2
+}
+
+gameSourcecodeView.prototype.init = function(sourceCodeInfos){
+  this.appendSourcecodeInfo('white',sourceCodeInfos)
+  this.appendSourcecodeInfo('black',sourceCodeInfos)
+  this.$othelloStartButton.click(function(){
+    let whiteUser = {
+      'userId': $('.whiteSourceCode option:selected').attr('codeId'),
+      'userName': $('.whiteSourceCode option:selected').attr('codeName')
+    }
+    let blackUser = {
+      'userId': $('.blackSourceCode option:selected').attr('codeId'),
+      'userName': $('.blackSourceCode option:selected').attr('codeName')
+    }
+    let gameNum = 1 // parseInt($('#gameNumSelector option:selected').attr('gameNum'))
+    console.log(gameNum)
+    $(window).trigger('setOthelloControllerUser',[whiteUser,blackUser,gameNum])
+  })
+}
+
+
+gameSourcecodeView.prototype.appendSourcecodeInfo = function(strColor,sourceCodeInfos){
+  if(strColor != 'white' && strColor != 'black'){
+    console.log('ERROR please input white or black')
+    return null
+  } else if(strColor == 'white'){
+    this.$whiteSourceCode.empty()
+    for(let i in sourceCodeInfos){
+      let $option = $(`<option codeName="${sourceCodeInfos[i]['code_name']}" codeId="${sourceCodeInfos[i]['id']}">${sourceCodeInfos[i]['code_name']}</option>`)
+      this.$whiteSourceCode.append($option)
+    }
+  } else if(strColor == 'black'){
+    this.$blackSourceCode.empty()
+    for(let i in sourceCodeInfos){
+      let $option = $(`<option codeName="${sourceCodeInfos[i]['code_name']}" codeId="${sourceCodeInfos[i]['id']}">${sourceCodeInfos[i]['code_name']}</option>`)
+      this.$blackSourceCode.append($option)
+    }
+  }
+}
+
+
 gameOptionView = function(){
   this.$gameOptionForm = $('.gameOption')
   this.gameNumSelectorName = 'gameNumSelector'
@@ -493,14 +552,14 @@ gameOptionView.prototype.initGameOption = function(users){
   this.$gameOptionForm.append(this.$othelloStartButton)
   this.$othelloStartButton.click(function(){
     let whiteUser = {
-      'userId': $('.whiteUserSelect option:selected').attr('userId'),
-      'userName': $('.whiteUserSelect option:selected').attr('userName')
+      'userId': $('.whiteSourceCode option:selected').attr('codeId'),
+      'userName': $('.whiteSourceCode option:selected').attr('codeName')
     }
     let blackUser = {
-      'userId': $('.blackUserSelect option:selected').attr('userId'),
-      'userName': $('.blackUserSelect option:selected').attr('userName')
+      'userId': $('.blackSourceCode option:selected').attr('codeId'),
+      'userName': $('.blackSourceCode option:selected').attr('codeName')
     }
-    let gameNum = parseInt($('.gameNumSelector option:selected').attr('gameNum'))
+    let gameNum = 1// parseInt($('.gameNumSelector option:selected').attr('gameNum'))
     console.log(gameNum)
     $(window).trigger('setOthelloControllerUser',[whiteUser,blackUser,gameNum])
   })
@@ -579,8 +638,9 @@ gameController.prototype.customEvent = function(){
 
 //Entrypoint
 function main(){
-  let myGameOptionController = new gameOptionController()
+  //let myGameOptionController = new gameOptionController()
   let myGameController = new gameController()
+  let myGameSourcecodeController = new gameSourcecodeController()
   myGameController.customEvent()
 }
 
