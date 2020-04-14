@@ -1,0 +1,9 @@
+FROM python:3.7-alpine
+
+MAINTAINER  goto_c@worksap.co.jp
+
+ENV LANG C.UTF-8
+
+COPY ./othello .
+
+RUN python setup.py install

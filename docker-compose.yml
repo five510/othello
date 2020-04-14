@@ -1,0 +1,38 @@
+version: '2'
+services:
+  front:
+    image: nginx:latest
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx:/etc/nginx/conf.d/
+      - ./frontend:/var/www/html
+  application:
+    build: 
+      context: .
+      dockerfile: Dockerfile 
+    ports:
+      - 5000:5000
+    expose:
+      - 5000
+    volumes:
+      - ./backend:/othello-application
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+  mysql:
+    image: mysql:5.7
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: othello
+      MYSQL_USER: othello
+      MYSQL_PASSWORD: othello
+      TZ: 'Asia/Tokyo'
+    volumes:
+    - ./backend/db/data:/var/lib/mysql
+    - ./backend/db/my.cnf:/etc/mysql/conf.d/my.cnf
+    - ./backend/db/sql:/docker-entrypoint-initdb.d
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
