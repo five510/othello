@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <script src="/lib/jquery.min.js"></script>
+        <script src="/lib/bootstrap.min.js"></script>
+		<link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/css/style.css" rel="stylesheet" />
+		<meta charset="utf-8">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		<meta name="viewport" content="width=device-width">
+		<title>User</title>
+	</head>
+	<body>
+		<div class="othelloNavigation"></div>
+		<div class="container">
+            <div class="userEdit">
+				<div class="form-group">
+					<label for="InputName">Name</label>
+					<input class="form-control" id="InputName" placeholder="Please input code name">
+				</div>
+				<div class="form-group">
+					<label for="InputCode">Code</label>
+					<textarea class="form-control" id="InputCode" rows="10" placeholder=""></textarea>
+				</div>
+				<button type="submit" id='verifyCode' class="btn btn-default">Verify</button>
+				<button type="submit" id='registerCode' class="btn btn-default">Submit</button>
+            </div>
+		</div>
+	<script src="/js/header.js"></script>
+	<script src="/js/api.js"></script>
+	<script src="/js/sourcecode-controller.js"></script>
+	</body>
+</html>

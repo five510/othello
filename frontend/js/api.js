@@ -118,6 +118,44 @@ apiClient.prototype.getSourcecodeDetail = function(sourceCodeId){
   })
 }
 
+apiClient.prototype.verifySourcecode = function(requestData){
+  console.log(requestData)
+  return new Promise(function(resolve, reject){
+      $.ajax({
+          url: "/api/soucecode/verify",
+          type: 'POST',
+          dataType: 'json',
+          contentType: 'application/json',
+          data: JSON.stringify(requestData),
+          timeout: 10000
+      }).done(function(result) {
+        resolve(result)
+      }).fail(function(result) {
+        console.log('[ERROR] /api/dispather/othello is failed')
+        reject(result)
+      });
+  })
+}
+
+apiClient.prototype.registerSourcecode = function(requestData){
+  console.log(requestData)
+  return new Promise(function(resolve, reject){
+      $.ajax({
+          url: "/api/soucecode",
+          type: 'POST',
+          dataType: 'json',
+          contentType: 'application/json',
+          data: JSON.stringify(requestData),
+          timeout: 10000
+      }).done(function(result) {
+        resolve(result)
+      }).fail(function(result) {
+        console.log('[ERROR] /api/soucecode is failed')
+        reject(result)
+      });
+  })
+}
+
 apiClient.prototype.createUser = function(requestData){
     return new Promise(function(resolve, reject){
         $.ajax({
