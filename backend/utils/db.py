@@ -61,6 +61,30 @@ def select_id_name_mst_source_code() -> list:
         logger.exception(err)
         return None
 
+def insert_mst_source_code(source_code: str,code_name: str) -> int:
+    try:
+        conn = dbh()
+        now_datetime = time.strftime('%Y-%m-%d %H:%M:%S')
+        with conn.cursor() as c:
+            sql = '''
+                INSERT INTO 
+                    `mst_source_code`  
+                    (`source_code`, `code_name`,`save_at`)
+                VALUES 
+                    (%s, %s, %s)
+                '''
+            c.execute(sql, (
+                source_code,
+                code_name,
+                now_datetime,
+            ))
+            source_code_id = c.lastrowid
+            conn.commit()
+            return source_code_id
+    except MySQLdb.Error as err:
+        logger.exception(err)
+        return None 
+    
 def insert_trn_battle_result(souce_code_id_1: int, souce_code_id_2: int) -> str:
     try:
         conn = dbh()
